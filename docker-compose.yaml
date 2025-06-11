@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
 
   backend:
-    image: wayshub-backend
+    image: wayshub-backend:1.0
     container_name: wayshub-backend
     restart: always
     networks:
