@@ -4,8 +4,6 @@ services:
     image: wayshub-backend:1.0
     container_name: wayshub-backend
     restart: always
-    networks:
-      - herta
     ports:
       - "5001:5000"
     command: >
@@ -14,6 +12,3 @@ services:
       npx sequelize db:migrate &&
       pm2-runtime ecosystem.config.js
       "
-
-networks:
-  herta:
