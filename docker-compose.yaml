@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+
+  backend:
+    image: wayshub-backend
+    container_name: wayshub-backend
+    restart: always
+    networks:
+      - herta
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "
+      npx sequelize db:create &&
+      npx sequelize db:migrate &&
+      pm2-runtime ecosystem.config.js
+      "
+
+networks:
+  herta:
