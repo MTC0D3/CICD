@@ -5,4 +5,4 @@ services:
     container_name: wayshub-backend
     restart: always
     ports:
-      - "5001:5000"
+      - "5002:5000"
