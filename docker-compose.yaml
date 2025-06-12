@@ -5,7 +5,7 @@ services:
     container_name: wayshub-backend
     restart: always
     ports:
-      - "5001:5000"
+      - "5009:5000"
     command: >
       sh -c "
       npx sequelize db:create &&
