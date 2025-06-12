@@ -4,7 +4,7 @@ WORKDIR /wayshub-backend
 
 COPY . .
 
-RUN npm install && 
+RUN npm install 
 
 EXPOSE 5000
 
