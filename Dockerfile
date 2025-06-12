@@ -4,8 +4,7 @@ WORKDIR /wayshub-backend
 
 COPY . .
 
-RUN npm install && \
-    npm install -g pm2@4.4.0 sequelize-cli
+RUN npm install && 
 
 EXPOSE 5000
 
