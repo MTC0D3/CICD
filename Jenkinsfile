@@ -35,6 +35,28 @@ pipeline {
             }
         }
 
+        stage('test the code') {
+            steps {
+                sshagent([secret]) {
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                    cd ${directory}
+                    docker run -d --name testcode -p 5001:5000 ${namebuild}
+                    sleep 10
+                    status_code=\$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5009/)
+                    if [ "\$status_code" = "404" ]; then
+                        echo "Webserver is up and returning 404 as expected!"
+                        docker rm -f testcode
+                    else
+                        echo "Webserver is not responding with expected 404, stopping the process."
+                        docker rm -f testcode
+                        exit 1
+                    fi
+                    echo "Selesai Testing!"
+                    exit
+                    EOF"""
+                }
+            }
+        }
 
         stage('deploy') {
             steps {
