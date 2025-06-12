@@ -1,3 +1,4 @@
+# Jenkinsfile
 def secret = 'taofiks-appserver'
 def server = 'taofiks@103.175.221.143'
 def directory = '/home/taofiks/wayshub-backend'
