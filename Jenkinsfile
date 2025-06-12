@@ -35,26 +35,34 @@ pipeline{
             }
         }
 
-        stage ('test the code'){
-            steps{
-                sshagent([secret]){
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                        cd ${directory}
-                        docker run -d --name testcode -p 5009:5000 ${namebuild}
-                        if wget --spider -q --server-response http://127.0.0.1:5009/ 2>&1 | grep '404 Not Found'; then
-                            echo "Webserver is up and returning 404 as expected!"
-                        else
-                            echo "Webserver is not responding with expected 404, stopping the process."
-                            docker rm -f testcode
-                            exit 1
-                        fi
-                        docker rm -f testcode
-                        echo "Selesai Testing!"
-                        exit
-                    EOF"""
-                }
-            }
+     stage ('test the code'){
+        steps{
+        sshagent([secret]){
+            sh """ssh -o StrictHostKeyChecking=no ${server} << 'EOF'
+                set -e
+                cd ${directory}
+                docker rm -f testcode || true
+                docker run -d --name testcode -p 5009:5000 ${namebuild}
+
+                echo "Menunggu service siap..."
+                sleep 10
+
+                STATUS_CODE=\$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5009/)
+                if [ "\$STATUS_CODE" -eq 404 ]; then
+                    echo "Webserver is up and returning 404 as expected!"
+                else
+                    echo "Unexpected response (\$STATUS_CODE), stopping process..."
+                    docker rm -f testcode
+                    exit 1
+                fi
+
+                docker rm -f testcode
+                echo "Selesai Testing!"
+                exit
+EOF"""
         }
+    }
+}
 
         stage ('deploy'){
             steps {
