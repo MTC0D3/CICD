@@ -1,8 +1,0 @@
-services:
-
-  backend:
-    image: wayshub-backend:1.0
-    container_name: wayshub-backend
-    restart: always
-    ports:
-      - "5002:5000"
