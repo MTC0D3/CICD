@@ -40,8 +40,8 @@ pipeline{
                 sshagent([secret]){
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                         cd ${directory}
-                        docker run -d --name testcode -p 5002:5000 ${namebuild}
-                        wget --spider localhost:5002
+                        docker run -d --name testcode -p 5000:5000 ${namebuild}
+                        wget --spider localhost:5000
 			docker stop testcode
                         docker rm -f testcode
                         echo "Selesai Testing!"
