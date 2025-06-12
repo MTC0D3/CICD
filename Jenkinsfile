@@ -35,26 +35,21 @@ pipeline{
             }
         }
 
-       /*stage ('test the code'){
+        stage ('test the code'){
             steps{
                 sshagent([secret]){
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                         cd ${directory}
-                        docker run -d --name testcode -p 5009:5000 ${namebuild}
-                        if wget --spider -q --server-response http://127.0.0.1:5009/ 2>&1 | grep '404 Not Found'; then
-                            echo "Webserver is up and returning 404 as expected!"
-                        else
-                            echo "Webserver is not responding with expected 404, stopping the process."
-                            docker rm -f testcode
-                            exit 1
-                        fi
+                        docker run -d --name testcode -p 5001:5000 ${namebuild}
+                        wget --spider localhost:5001
+			docker stop testcode
                         docker rm -f testcode
                         echo "Selesai Testing!"
                         exit
                     EOF"""
                 }
             }
-        }*/
+        }
 
         stage ('deploy'){
             steps {
