@@ -65,7 +65,7 @@ pipeline{
             }
         }
 
-        /*stage('push to Docker Hub') {
+        stage('push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sshagent([secret]) {
@@ -80,7 +80,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
 
         stage('push notif to discord') {
             steps {
