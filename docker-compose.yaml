@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: wayshub-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: wayshub
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: wayshub-backend:1.0
+    container_name: wayshub-be
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      DB_HOST: database
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: wayshub
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "
+      npx sequelize db:create &&
+      npx sequelize db:migrate &&
+      pm2-runtime ecosystem.config.js
+      "
+
+volumes:
+  mysql-data:
+
